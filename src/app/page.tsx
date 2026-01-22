@@ -330,7 +330,7 @@ export default function StemLandingPage() {
         {/* Hero Section */}
         <div className="min-h-[700px] sm:min-h-[850px] md:min-h-[950px] lg:h-[979px] overflow-visible relative shrink-0 w-full pb-8 sm:pb-0">
           {/* Background Image */}
-          <div className="absolute h-full sm:h-[1054.795px] left-0 top-0 w-full sm:w-[1582px] overflow-hidden">
+          <div className="absolute h-full left-0 top-0 w-full overflow-hidden">
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
               <img alt="" className="absolute max-w-none object-cover w-full h-full" src={imgBackground} />
               <div className="absolute bg-[rgba(255,255,255,0.92)] inset-0" />
@@ -338,7 +338,7 @@ export default function StemLandingPage() {
           </div>
 
           {/* Chatbox */}
-          <div className="absolute bg-white flex flex-col gap-6 sm:gap-[64px] items-start left-1/2 p-3 sm:p-[16px] rounded-[8px] shadow-[0px_0px_16px_7px_rgba(236,236,236,0.2)] bottom-4 sm:bottom-auto sm:top-[734px] lg:top-[734px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] md:w-[600px] lg:w-[794px] xl:w-[900px] max-w-[1000px]">
+          <div className="absolute bg-white flex flex-col gap-6 sm:gap-[64px] items-start left-1/2 p-3 sm:p-[16px] lg:p-[20px] rounded-[8px] shadow-[0px_0px_16px_7px_rgba(236,236,236,0.2)] bottom-4 sm:bottom-auto sm:top-[734px] lg:top-[734px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-80px)] lg:w-[min(70%,1200px)]">
             <div className="flex items-center relative shrink-0 w-full gap-2">
               <input
                 type="text"
@@ -388,13 +388,13 @@ export default function StemLandingPage() {
 
           {/* Nav Bar */}
           <NavBar
-            className="absolute border border-[#e7e7e7] border-solid flex items-center justify-between left-1/2 px-4 sm:px-[20px] py-[12px] rounded-[16px] top-4 sm:top-[43px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[calc(100%-100px)] xl:w-[calc(100%-200px)] max-w-[1440px] 2xl:max-w-[1600px] bg-white/80 backdrop-blur-sm z-40"
+            className="absolute border border-[#e7e7e7] border-solid flex items-center justify-between left-1/2 px-4 sm:px-[20px] lg:px-[40px] py-[12px] rounded-[16px] top-4 sm:top-[43px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-80px)] lg:w-[calc(100%-200px)] xl:w-[min(90%,1600px)] bg-white/80 backdrop-blur-sm z-40"
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
           />
 
           {/* Hero Content */}
-          <div className="absolute flex flex-col gap-4 sm:gap-[20px] items-center left-1/2 top-[100px] sm:top-[150px] lg:top-[207px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[796px] xl:w-[900px] max-w-[1000px] px-4 sm:px-0">
+          <div className="absolute flex flex-col gap-4 sm:gap-[20px] items-center left-1/2 top-[100px] sm:top-[150px] lg:top-[207px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-80px)] lg:w-[min(80%,1200px)] px-4 sm:px-0">
             <div className="flex flex-col gap-[3px] items-center relative shrink-0 w-full">
               <div className="flex flex-wrap gap-2 sm:gap-[10px] items-center justify-center px-[6px] py-[2px] relative rounded-[8px] shrink-0">
                 <p className="font-medium leading-[16px] not-italic relative shrink-0 text-[#197be7] text-[12px] sm:text-[14px] md:text-[16px] text-center">Science</p>
@@ -415,7 +415,7 @@ export default function StemLandingPage() {
           </div>
 
           {/* Target Audience */}
-          <div className="absolute flex flex-col gap-4 sm:gap-[28px] items-center left-1/2 top-[420px] sm:top-[520px] md:top-[580px] lg:top-[613px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[900px] xl:w-[1100px] max-w-[1200px]">
+          <div className="absolute flex flex-col gap-4 sm:gap-[28px] items-center left-1/2 top-[420px] sm:top-[520px] md:top-[580px] lg:top-[613px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-80px)] lg:w-[min(85%,1400px)]">
             <p className="font-medium leading-normal not-italic relative shrink-0 text-[#333] text-[16px] sm:text-[18px] md:text-[20px] text-center w-full">
               Who is your Target Audience?
             </p>
@@ -455,8 +455,8 @@ export default function StemLandingPage() {
         </div>
 
         {/* Features Section */}
-        <div id="features" className="bg-[#fbfcfd] flex flex-col gap-8 sm:gap-12 lg:gap-[47px] items-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] xl:px-[150px] 2xl:px-[200px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full">
-          <div className="flex flex-col gap-[2px] items-center justify-center relative shrink-0 max-w-[900px] xl:max-w-[1100px]">
+        <div id="features" className="bg-[#fbfcfd] flex flex-col gap-8 sm:gap-12 lg:gap-[47px] items-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[80px] xl:px-[120px] 2xl:px-[160px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full">
+          <div className="flex flex-col gap-[2px] items-center justify-center relative shrink-0 w-full max-w-[1200px]">
             <div className="flex items-center justify-center px-[6px] py-[2px] relative rounded-[8px] shrink-0">
               <p className="font-medium leading-[16px] not-italic relative shrink-0 text-[#197be7] text-[14px] sm:text-[16px] text-center">Features</p>
             </div>
@@ -469,7 +469,7 @@ export default function StemLandingPage() {
           </div>
 
           {/* Feature Cards */}
-          <div className="flex flex-col md:flex-row gap-6 lg:gap-[24px] xl:gap-[32px] items-stretch relative shrink-0 w-full max-w-[1240px] xl:max-w-[1400px] 2xl:max-w-[1600px]">
+          <div className="flex flex-col md:flex-row gap-6 lg:gap-[32px] xl:gap-[40px] items-stretch relative shrink-0 w-full max-w-[1600px]">
             {/* Card 1 */}
             <div className="bg-white flex-1 min-h-[380px] overflow-clip relative rounded-[20px] shadow-[0px_4px_20px_5px_rgba(236,236,236,0.09)]">
               <div className="flex flex-col gap-[8px] items-start px-4 not-italic pt-[200px] sm:pt-[209px] pb-4">
@@ -526,7 +526,7 @@ export default function StemLandingPage() {
         </div>
 
         {/* Personalized Support Section */}
-        <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-center justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] xl:px-[150px] 2xl:px-[200px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
+        <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-center justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[80px] xl:px-[120px] 2xl:px-[160px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
           <div className="flex flex-1 flex-col gap-[2px] items-start lg:items-start min-h-px min-w-px relative order-2 lg:order-1 text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start px-[6px] py-[2px] relative rounded-[8px] shrink-0 w-full lg:w-auto">
               <p className="font-medium leading-[16px] not-italic relative shrink-0 text-[#197be7] text-[14px] sm:text-[16px]">STEM Translation</p>
@@ -545,7 +545,7 @@ export default function StemLandingPage() {
         </div>
 
         {/* FAQ Section */}
-        <div id="faqs" className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-start justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] xl:px-[150px] 2xl:px-[200px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
+        <div id="faqs" className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-start justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[80px] xl:px-[120px] 2xl:px-[160px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
           <div className="flex flex-1 flex-col gap-6 lg:gap-[47px] items-start min-h-px min-w-px relative w-full lg:w-auto">
             <div className="flex flex-col gap-[2px] items-start relative shrink-0 w-full">
               <div className="flex items-center justify-center px-[6px] py-[2px] relative rounded-[8px] shrink-0">
@@ -593,7 +593,7 @@ export default function StemLandingPage() {
         </div>
 
         {/* Get Started Section */}
-        <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-center justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] xl:px-[150px] 2xl:px-[200px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
+        <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-center justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[80px] xl:px-[120px] 2xl:px-[160px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
           <div className="flex flex-1 flex-col gap-6 lg:gap-[47px] items-center lg:items-start min-h-px min-w-px relative text-center lg:text-left order-2 lg:order-1">
             <div className="flex flex-col gap-[2px] items-center lg:items-start relative shrink-0 w-full">
               <div className="flex items-center justify-center px-[6px] py-[2px] relative rounded-[8px] shrink-0">
@@ -624,13 +624,13 @@ export default function StemLandingPage() {
           </div>
 
           {/* Copyright Bar */}
-          <div className="absolute bottom-0 font-medium min-h-[56px] leading-normal left-0 not-italic text-[12px] sm:text-[14px] lg:text-[16px] text-white w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between px-4 sm:px-8 lg:px-[80px] xl:px-[150px] 2xl:px-[200px] py-3 sm:py-0 gap-2 sm:gap-0" style={{ backgroundImage: "linear-gradient(174.624deg, rgb(56, 178, 192) 10.008%, rgb(29, 130, 226) 11.794%, rgb(25, 123, 231) 30.533%, rgb(36, 142, 217) 69.262%, rgb(60, 186, 186) 116.28%)" }}>
+          <div className="absolute bottom-0 font-medium min-h-[56px] leading-normal left-0 not-italic text-[12px] sm:text-[14px] lg:text-[16px] text-white w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between px-4 sm:px-8 lg:px-[80px] xl:px-[120px] 2xl:px-[160px] py-3 sm:py-0 gap-2 sm:gap-0" style={{ backgroundImage: "linear-gradient(174.624deg, rgb(56, 178, 192) 10.008%, rgb(29, 130, 226) 11.794%, rgb(25, 123, 231) 30.533%, rgb(36, 142, 217) 69.262%, rgb(60, 186, 186) 116.28%)" }}>
             <p className="text-center sm:text-left">Copyright 2025 - STEM Translation Co.</p>
             <p className="text-center sm:text-right">Terms of Service | Privacy Policy</p>
           </div>
 
           {/* Footer Links */}
-          <div className="absolute flex flex-col sm:flex-row items-center sm:items-start justify-between left-4 sm:left-8 lg:left-[100px] xl:left-[150px] 2xl:left-[200px] right-4 sm:right-8 lg:right-[100px] xl:right-[150px] 2xl:right-[200px] bottom-[80px] sm:bottom-auto sm:top-[515.34px] gap-6 sm:gap-0">
+          <div className="absolute flex flex-col sm:flex-row items-center sm:items-start justify-between left-4 sm:left-8 lg:left-[80px] xl:left-[120px] 2xl:left-[160px] right-4 sm:right-8 lg:right-[80px] xl:right-[120px] 2xl:right-[160px] bottom-[80px] sm:bottom-auto sm:top-[515.34px] gap-6 sm:gap-0">
             <div className="flex flex-col gap-[12px] items-center sm:items-start relative shrink-0">
               <div className="h-[30px] sm:h-[35.606px] relative shrink-0 w-[90px] sm:w-[105px]">
                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none w-full h-full" src={imgLogo} />
@@ -652,7 +652,7 @@ export default function StemLandingPage() {
           </div>
 
           {/* Newsletter */}
-          <div className="relative sm:absolute flex flex-col gap-4 sm:gap-[18px] items-center sm:items-start justify-center px-4 sm:px-0 sm:left-8 lg:left-[100px] xl:left-[150px] 2xl:left-[200px] pt-8 sm:pt-0 sm:top-[159.22px] w-full sm:w-auto lg:w-[966px] xl:w-[1100px]">
+          <div className="relative sm:absolute flex flex-col gap-4 sm:gap-[18px] items-center sm:items-start justify-center px-4 sm:px-0 sm:left-8 lg:left-[80px] xl:left-[120px] 2xl:left-[160px] pt-8 sm:pt-0 sm:top-[159.22px] w-full sm:w-auto lg:w-[min(60%,1200px)]">
             <div className="font-medium leading-tight sm:leading-[0] min-h-px min-w-px not-italic relative text-[#333] text-[28px] sm:text-[36px] md:text-[42px] lg:text-[48px] w-full text-center sm:text-left">
               <p className="mb-0 sm:leading-[68px]">Don&apos;t miss any Updates.</p>
               <p className="sm:leading-[68px]">Subscribe our Newsletters.</p>
