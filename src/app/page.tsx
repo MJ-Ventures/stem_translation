@@ -157,10 +157,30 @@ function AttachmentSquare({ className }: { className?: string }) {
   );
 }
 
+// Types for API
+interface Message {
+  sender: 'user' | 'assistant';
+  text: string;
+  timestamp: string;
+}
+
+interface ChatState {
+  conversationId: string | null;
+  messages: Message[];
+  isLoading: boolean;
+}
+
 export default function StemLandingPage() {
   const [openFaqIndices, setOpenFaqIndices] = useState<number[]>([]);
   const [showAttachDropdown, setShowAttachDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessage, setChatMessage] = useState('');
+  const [chatState, setChatState] = useState<ChatState>({
+    conversationId: null,
+    messages: [],
+    isLoading: false,
+  });
 
   const toggleFaq = (index: number) => {
     setOpenFaqIndices(prev =>
@@ -168,6 +188,117 @@ export default function StemLandingPage() {
         ? prev.filter(i => i !== index)
         : [...prev, index]
     );
+  };
+
+  const handleChatSubmit = async () => {
+    if (!chatMessage.trim()) return;
+
+    const userMessage = chatMessage.trim();
+    setChatMessage('');
+    setChatOpen(true);
+    
+    // Add user message immediately
+    setChatState(prev => ({
+      ...prev,
+      messages: [...prev.messages, {
+        sender: 'user',
+        text: userMessage,
+        timestamp: new Date().toISOString(),
+      }],
+      isLoading: true,
+    }));
+
+    try {
+      const API_BASE = 'https://stem-translation-891212753818.us-central1.run.app/api/monitoring/conversations';
+      
+      if (!chatState.conversationId) {
+        // Create new conversation
+        const response = await fetch(`${API_BASE}/create`, {
+          method: 'POST',
+          headers: {
+            'accept': '*/*',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            additional_context: null,
+            conversation_id: null,
+            message: userMessage,
+            name: null,
+          }),
+        });
+
+        const data = await response.json();
+        
+        setChatState(prev => ({
+          ...prev,
+          conversationId: data.conversation_id,
+          messages: [
+            ...prev.messages,
+            {
+              sender: 'assistant',
+              text: data.reply,
+              timestamp: new Date().toISOString(),
+            }
+          ],
+          isLoading: false,
+        }));
+
+        // Generate conversation name in background
+        fetch(`${API_BASE}/${data.conversation_id}/name`, {
+          method: 'POST',
+          headers: { 'accept': '*/*' },
+        });
+      } else {
+        // Send message to existing conversation
+        const response = await fetch(`${API_BASE}/${chatState.conversationId}/message`, {
+          method: 'POST',
+          headers: {
+            'accept': '*/*',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            additional_context: null,
+            message: userMessage,
+          }),
+        });
+
+        const data = await response.json();
+        
+        setChatState(prev => ({
+          ...prev,
+          messages: [
+            ...prev.messages,
+            {
+              sender: 'assistant',
+              text: data.reply,
+              timestamp: new Date().toISOString(),
+            }
+          ],
+          isLoading: false,
+        }));
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setChatState(prev => ({
+        ...prev,
+        messages: [
+          ...prev.messages,
+          {
+            sender: 'assistant',
+            text: 'Sorry, there was an error processing your message. Please try again.',
+            timestamp: new Date().toISOString(),
+          }
+        ],
+        isLoading: false,
+      }));
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleChatSubmit();
+    }
   };
 
   const faqs = [
@@ -207,12 +338,19 @@ export default function StemLandingPage() {
           </div>
 
           {/* Chatbox */}
-          <div className="absolute bg-white flex flex-col gap-6 sm:gap-[64px] items-start left-1/2 p-3 sm:p-[16px] rounded-[8px] shadow-[0px_0px_16px_7px_rgba(236,236,236,0.2)] bottom-4 sm:bottom-auto sm:top-[734px] lg:top-[734px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] md:w-[600px] lg:w-[794px] max-w-[794px]">
+          <div className="absolute bg-white flex flex-col gap-6 sm:gap-[64px] items-start left-1/2 p-3 sm:p-[16px] rounded-[8px] shadow-[0px_0px_16px_7px_rgba(236,236,236,0.2)] bottom-4 sm:bottom-auto sm:top-[734px] lg:top-[734px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] md:w-[600px] lg:w-[794px] xl:w-[900px] max-w-[1000px]">
             <div className="flex items-center relative shrink-0 w-full gap-2">
-              <p className="flex-[1_0_0] font-medium italic leading-[24px] sm:leading-[32px] min-h-px min-w-px not-italic relative text-[#999] text-[14px] sm:text-[16px]">
-                What would you like to learn about today?
-              </p>
-              <ChatCta className="flex items-center justify-center px-[12px] py-[8px] relative rounded-[10px] shrink-0 cursor-pointer hover:opacity-90 transition-opacity" />
+              <input
+                type="text"
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="What would you like to learn about today?"
+                className="flex-[1_0_0] font-medium leading-[24px] sm:leading-[32px] min-h-px min-w-px not-italic relative text-[#333] text-[14px] sm:text-[16px] outline-none placeholder:text-[#999] placeholder:italic"
+              />
+              <button onClick={handleChatSubmit} disabled={!chatMessage.trim()}>
+                <ChatCta className="flex items-center justify-center px-[12px] py-[8px] relative rounded-[10px] shrink-0 cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed" />
+              </button>
             </div>
             <div className="flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               <div className="h-[1px] relative shrink-0 w-full bg-[#e7e7e7]" />
@@ -250,13 +388,13 @@ export default function StemLandingPage() {
 
           {/* Nav Bar */}
           <NavBar
-            className="absolute border border-[#e7e7e7] border-solid flex items-center justify-between left-1/2 px-4 sm:px-[20px] py-[12px] rounded-[16px] top-4 sm:top-[43px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[1112px] max-w-[1112px] bg-white/80 backdrop-blur-sm z-40"
+            className="absolute border border-[#e7e7e7] border-solid flex items-center justify-between left-1/2 px-4 sm:px-[20px] py-[12px] rounded-[16px] top-4 sm:top-[43px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[calc(100%-100px)] xl:w-[calc(100%-200px)] max-w-[1440px] 2xl:max-w-[1600px] bg-white/80 backdrop-blur-sm z-40"
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
           />
 
           {/* Hero Content */}
-          <div className="absolute flex flex-col gap-4 sm:gap-[20px] items-center left-1/2 top-[100px] sm:top-[150px] lg:top-[207px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[796px] max-w-[796px] px-4 sm:px-0">
+          <div className="absolute flex flex-col gap-4 sm:gap-[20px] items-center left-1/2 top-[100px] sm:top-[150px] lg:top-[207px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[796px] xl:w-[900px] max-w-[1000px] px-4 sm:px-0">
             <div className="flex flex-col gap-[3px] items-center relative shrink-0 w-full">
               <div className="flex flex-wrap gap-2 sm:gap-[10px] items-center justify-center px-[6px] py-[2px] relative rounded-[8px] shrink-0">
                 <p className="font-medium leading-[16px] not-italic relative shrink-0 text-[#197be7] text-[12px] sm:text-[14px] md:text-[16px] text-center">Science</p>
@@ -277,7 +415,7 @@ export default function StemLandingPage() {
           </div>
 
           {/* Target Audience */}
-          <div className="absolute flex flex-col gap-4 sm:gap-[28px] items-center left-1/2 top-[420px] sm:top-[520px] md:top-[580px] lg:top-[613px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[900px] max-w-[900px]">
+          <div className="absolute flex flex-col gap-4 sm:gap-[28px] items-center left-1/2 top-[420px] sm:top-[520px] md:top-[580px] lg:top-[613px] translate-x-[-50%] w-[calc(100%-32px)] sm:w-[calc(100%-48px)] lg:w-[900px] xl:w-[1100px] max-w-[1200px]">
             <p className="font-medium leading-normal not-italic relative shrink-0 text-[#333] text-[16px] sm:text-[18px] md:text-[20px] text-center w-full">
               Who is your Target Audience?
             </p>
@@ -317,8 +455,8 @@ export default function StemLandingPage() {
         </div>
 
         {/* Features Section */}
-        <div id="features" className="bg-[#fbfcfd] flex flex-col gap-8 sm:gap-12 lg:gap-[47px] items-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full">
-          <div className="flex flex-col gap-[2px] items-center justify-center relative shrink-0 max-w-[900px]">
+        <div id="features" className="bg-[#fbfcfd] flex flex-col gap-8 sm:gap-12 lg:gap-[47px] items-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] xl:px-[150px] 2xl:px-[200px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full">
+          <div className="flex flex-col gap-[2px] items-center justify-center relative shrink-0 max-w-[900px] xl:max-w-[1100px]">
             <div className="flex items-center justify-center px-[6px] py-[2px] relative rounded-[8px] shrink-0">
               <p className="font-medium leading-[16px] not-italic relative shrink-0 text-[#197be7] text-[14px] sm:text-[16px] text-center">Features</p>
             </div>
@@ -331,7 +469,7 @@ export default function StemLandingPage() {
           </div>
 
           {/* Feature Cards */}
-          <div className="flex flex-col md:flex-row gap-6 lg:gap-[24px] items-stretch relative shrink-0 w-full max-w-[1240px]">
+          <div className="flex flex-col md:flex-row gap-6 lg:gap-[24px] xl:gap-[32px] items-stretch relative shrink-0 w-full max-w-[1240px] xl:max-w-[1400px] 2xl:max-w-[1600px]">
             {/* Card 1 */}
             <div className="bg-white flex-1 min-h-[380px] overflow-clip relative rounded-[20px] shadow-[0px_4px_20px_5px_rgba(236,236,236,0.09)]">
               <div className="flex flex-col gap-[8px] items-start px-4 not-italic pt-[200px] sm:pt-[209px] pb-4">
@@ -388,7 +526,7 @@ export default function StemLandingPage() {
         </div>
 
         {/* Personalized Support Section */}
-        <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] items-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full">
+        <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-center justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] xl:px-[150px] 2xl:px-[200px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
           <div className="flex flex-1 flex-col gap-[2px] items-start lg:items-start min-h-px min-w-px relative order-2 lg:order-1 text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start px-[6px] py-[2px] relative rounded-[8px] shrink-0 w-full lg:w-auto">
               <p className="font-medium leading-[16px] not-italic relative shrink-0 text-[#197be7] text-[14px] sm:text-[16px]">STEM Translation</p>
@@ -401,13 +539,13 @@ export default function StemLandingPage() {
               <Cta className="flex items-center justify-center px-[20px] py-[10px] relative rounded-[10px] shrink-0 cursor-pointer hover:opacity-90 transition-opacity" text="Start Conversation" />
             </div>
           </div>
-          <div className="bg-[#f9fcff] h-[300px] sm:h-[400px] md:h-[500px] lg:h-[599px] overflow-clip relative rounded-[20px] lg:rounded-[23.709px] shrink-0 w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[598px] lg:w-[598px] order-1 lg:order-2">
+          <div className="bg-[#f9fcff] h-[300px] sm:h-[400px] md:h-[500px] lg:h-[599px] xl:h-[650px] overflow-clip relative rounded-[20px] lg:rounded-[23.709px] shrink-0 w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[598px] lg:w-[598px] xl:w-[650px] xl:max-w-[650px] order-1 lg:order-2">
             <img alt="Jessica Burgess - The STEM Translator" className="absolute inset-0 max-w-none object-cover pointer-events-none w-full h-full" src={imgJessica} />
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div id="faqs" className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] items-start justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full">
+        <div id="faqs" className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-start justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] xl:px-[150px] 2xl:px-[200px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
           <div className="flex flex-1 flex-col gap-6 lg:gap-[47px] items-start min-h-px min-w-px relative w-full lg:w-auto">
             <div className="flex flex-col gap-[2px] items-start relative shrink-0 w-full">
               <div className="flex items-center justify-center px-[6px] py-[2px] relative rounded-[8px] shrink-0">
@@ -429,7 +567,7 @@ export default function StemLandingPage() {
           </div>
 
           {/* FAQ Items */}
-          <div className="flex flex-col gap-2 sm:gap-[8px] items-start justify-center relative shrink-0 w-full lg:w-[645px]">
+          <div className="flex flex-col gap-2 sm:gap-[8px] items-start justify-center relative shrink-0 w-full lg:w-[645px] xl:w-[750px]">
             {faqs.map((faq, index) => (
               <div
                 key={index}
@@ -455,22 +593,22 @@ export default function StemLandingPage() {
         </div>
 
         {/* Get Started Section */}
-        <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] items-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full">
+        <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-[47px] xl:gap-[80px] items-center justify-center overflow-clip px-4 sm:px-8 md:px-12 lg:px-[100px] xl:px-[150px] 2xl:px-[200px] py-16 sm:py-24 md:py-32 lg:py-[200px] relative shrink-0 w-full max-w-[1800px] mx-auto">
           <div className="flex flex-1 flex-col gap-6 lg:gap-[47px] items-center lg:items-start min-h-px min-w-px relative text-center lg:text-left order-2 lg:order-1">
             <div className="flex flex-col gap-[2px] items-center lg:items-start relative shrink-0 w-full">
               <div className="flex items-center justify-center px-[6px] py-[2px] relative rounded-[8px] shrink-0">
                 <p className="font-medium leading-[16px] not-italic relative shrink-0 text-[#197be7] text-[14px] sm:text-[16px]">Get Started</p>
               </div>
               <div className="flex flex-col gap-4 sm:gap-[24px] items-center lg:items-start not-italic relative shrink-0 text-[#333] w-full">
-                <p className="font-medium leading-tight sm:leading-normal min-w-full relative shrink-0 text-[28px] sm:text-[36px] md:text-[48px] lg:text-[56px]">Try the Chatbot- Let&apos;s Make STEM Make Sense</p>
-                <p className="font-normal leading-[24px] sm:leading-[32px] relative shrink-0 text-[14px] sm:text-[16px] w-full lg:w-[524px]">
+                <p className="font-medium leading-tight sm:leading-normal min-w-full relative shrink-0 text-[28px] sm:text-[36px] md:text-[48px] lg:text-[56px] xl:text-[64px]">Try the Chatbot- Let&apos;s Make STEM Make Sense</p>
+                <p className="font-normal leading-[24px] sm:leading-[32px] relative shrink-0 text-[14px] sm:text-[16px] xl:text-[18px] w-full lg:w-[524px] xl:w-[600px]">
                   Your audience deserves explanations that make sense the first time. Use the chatbot now and elevate every STEM conversation you have.
                 </p>
               </div>
             </div>
             <Cta className="flex items-center justify-center px-[20px] py-[10px] relative rounded-[10px] shrink-0 cursor-pointer hover:opacity-90 transition-opacity" text="Start Conversation" />
           </div>
-          <div className="bg-[#f9fcff] h-[280px] sm:h-[350px] md:h-[400px] lg:h-[448px] overflow-clip relative rounded-[20px] lg:rounded-[23.709px] shrink-0 w-full max-w-[350px] sm:max-w-[400px] lg:max-w-[473px] lg:w-[473px] order-1 lg:order-2">
+          <div className="bg-[#f9fcff] h-[280px] sm:h-[350px] md:h-[400px] lg:h-[448px] xl:h-[500px] overflow-clip relative rounded-[20px] lg:rounded-[23.709px] shrink-0 w-full max-w-[350px] sm:max-w-[400px] lg:max-w-[473px] lg:w-[473px] xl:w-[550px] xl:max-w-[550px] order-1 lg:order-2">
             <img alt="STEM Translation Chatbot Preview" className="absolute inset-0 max-w-none object-cover pointer-events-none w-full h-full" src={imgChatbotPreview} />
           </div>
         </div>
@@ -486,13 +624,13 @@ export default function StemLandingPage() {
           </div>
 
           {/* Copyright Bar */}
-          <div className="absolute bottom-0 font-medium min-h-[56px] leading-normal left-0 not-italic text-[12px] sm:text-[14px] lg:text-[16px] text-white w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between px-4 sm:px-8 lg:px-[80px] py-3 sm:py-0 gap-2 sm:gap-0" style={{ backgroundImage: "linear-gradient(174.624deg, rgb(56, 178, 192) 10.008%, rgb(29, 130, 226) 11.794%, rgb(25, 123, 231) 30.533%, rgb(36, 142, 217) 69.262%, rgb(60, 186, 186) 116.28%)" }}>
+          <div className="absolute bottom-0 font-medium min-h-[56px] leading-normal left-0 not-italic text-[12px] sm:text-[14px] lg:text-[16px] text-white w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between px-4 sm:px-8 lg:px-[80px] xl:px-[150px] 2xl:px-[200px] py-3 sm:py-0 gap-2 sm:gap-0" style={{ backgroundImage: "linear-gradient(174.624deg, rgb(56, 178, 192) 10.008%, rgb(29, 130, 226) 11.794%, rgb(25, 123, 231) 30.533%, rgb(36, 142, 217) 69.262%, rgb(60, 186, 186) 116.28%)" }}>
             <p className="text-center sm:text-left">Copyright 2025 - STEM Translation Co.</p>
             <p className="text-center sm:text-right">Terms of Service | Privacy Policy</p>
           </div>
 
           {/* Footer Links */}
-          <div className="absolute flex flex-col sm:flex-row items-center sm:items-start justify-between left-4 sm:left-8 lg:left-[100px] right-4 sm:right-8 lg:right-auto bottom-[80px] sm:bottom-auto sm:top-[515.34px] lg:w-[1240px] gap-6 sm:gap-0">
+          <div className="absolute flex flex-col sm:flex-row items-center sm:items-start justify-between left-4 sm:left-8 lg:left-[100px] xl:left-[150px] 2xl:left-[200px] right-4 sm:right-8 lg:right-[100px] xl:right-[150px] 2xl:right-[200px] bottom-[80px] sm:bottom-auto sm:top-[515.34px] gap-6 sm:gap-0">
             <div className="flex flex-col gap-[12px] items-center sm:items-start relative shrink-0">
               <div className="h-[30px] sm:h-[35.606px] relative shrink-0 w-[90px] sm:w-[105px]">
                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none w-full h-full" src={imgLogo} />
@@ -514,7 +652,7 @@ export default function StemLandingPage() {
           </div>
 
           {/* Newsletter */}
-          <div className="relative sm:absolute flex flex-col gap-4 sm:gap-[18px] items-center sm:items-start justify-center px-4 sm:px-0 sm:left-8 lg:left-[100px] pt-8 sm:pt-0 sm:top-[159.22px] w-full sm:w-auto lg:w-[966px]">
+          <div className="relative sm:absolute flex flex-col gap-4 sm:gap-[18px] items-center sm:items-start justify-center px-4 sm:px-0 sm:left-8 lg:left-[100px] xl:left-[150px] 2xl:left-[200px] pt-8 sm:pt-0 sm:top-[159.22px] w-full sm:w-auto lg:w-[966px] xl:w-[1100px]">
             <div className="font-medium leading-tight sm:leading-[0] min-h-px min-w-px not-italic relative text-[#333] text-[28px] sm:text-[36px] md:text-[42px] lg:text-[48px] w-full text-center sm:text-left">
               <p className="mb-0 sm:leading-[68px]">Don&apos;t miss any Updates.</p>
               <p className="sm:leading-[68px]">Subscribe our Newsletters.</p>
@@ -530,6 +668,85 @@ export default function StemLandingPage() {
                 </div>
               </div>
               <Cta className="flex items-center justify-center px-[20px] py-[10px] relative rounded-[10px] shrink-0 cursor-pointer hover:opacity-90 transition-opacity" text="Subscribe" />
+            </div>
+          </div>
+        </div>
+
+        {/* Chat Side Panel */}
+        <div className={`fixed top-0 right-0 h-full w-full sm:w-[480px] md:w-[600px] bg-white shadow-2xl z-50 transition-transform duration-300 ease-in-out ${chatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div className="flex flex-col h-full">
+            {/* Chat Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-[#38b2c0] via-[#1d82e2] to-[#3cbaba]">
+              <h2 className="text-white text-xl font-semibold">STEM Translation Chat</h2>
+              <button 
+                onClick={() => setChatOpen(false)}
+                className="text-white hover:text-gray-200 transition-colors p-2"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            {/* Messages Container */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+              {chatState.messages.length === 0 && !chatState.isLoading && (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-gray-400 text-center">Start a conversation to get personalized STEM explanations</p>
+                </div>
+              )}
+
+              {chatState.messages.map((msg, index) => (
+                <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] rounded-lg px-4 py-3 ${
+                    msg.sender === 'user' 
+                      ? 'bg-gradient-to-r from-[#fa8c54] to-[#fb31bb] text-white' 
+                      : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    <p className="text-sm whitespace-pre-wrap leading-relaxed">{msg.text}</p>
+                    <p className={`text-xs mt-2 ${msg.sender === 'user' ? 'text-white/70' : 'text-gray-500'}`}>
+                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              {chatState.isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-gray-100 rounded-lg px-4 py-3">
+                    <div className="flex space-x-2">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Chat Input */}
+            <div className="border-t border-gray-200 px-6 py-4 bg-white">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={chatMessage}
+                  onChange={(e) => setChatMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg outline-none focus:border-[#1d82e2] focus:ring-2 focus:ring-[#1d82e2]/20 transition-all text-[14px]"
+                  disabled={chatState.isLoading}
+                />
+                <button
+                  onClick={handleChatSubmit}
+                  disabled={!chatMessage.trim() || chatState.isLoading}
+                  className="px-4 py-3 bg-gradient-to-r from-[#fa8c54] to-[#fb31bb] text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[48px]"
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.3333 1.66667L9.16667 10.8333M18.3333 1.66667L12.5 18.3333L9.16667 10.8333M18.3333 1.66667L1.66667 7.5L9.16667 10.8333" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
