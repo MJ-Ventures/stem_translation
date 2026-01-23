@@ -1,14 +1,30 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
 
+@theme {
+  /* White  */
+  --color-white-1: #E7E7E7;
+  --color-white-2: #F2F2F2;
+  --color-white-3: #F8F8F8;
+  --color-white-4: #FBFCFD;
+  --color-white-5: #F9FCFF;
+
+  /* Black */
+  --color-black-1: #252525;
+  --color-black-2: #333333;
+
+  /* Gray */
+  --color-gray-1: #999999;
+
+  /* Blue */
+  --color-blue-1: #197be7;
+
+  /* Shadow */
+  --shadow-1: 0px 0px 16px 7px #ECECEC33;
+}
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  scroll-behavior: smooth;
 }
 
 /* Gradient button styles */
