@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import NavBar from './Navbar';
 
@@ -57,10 +57,10 @@ const HeroContent = () => {
       <div className="flex flex-col gap-[3px] w-full">
         <div className="flex gap-[10px] items-center justify-center py-[2px] px-[6px]">
           {topics.map((topic) => (
-            <>
+            <React.Fragment key={topic}>
               <p className="font-medium text-[16px] leading-[16px] tracking-0 text-blue-1 text-center">{topic}</p>
               <Image alt="" className="hidden last-of-type:hidden sm:block shrink-0 w-[4px] h-[4px]" src="/images/dot.svg" width={100} height={100} />
-            </>
+            </React.Fragment>
           ))}
         </div>
         <p className="font-medium text-[28px] leading-[100%] lg:text-[48px] tracking-0 text-black-2 text-center">

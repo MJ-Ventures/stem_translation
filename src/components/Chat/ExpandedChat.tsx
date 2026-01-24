@@ -48,6 +48,43 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
     }
   }, [messages, isLoading]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (open) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      // Lock body scroll
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore body scroll
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+
+    // Cleanup function
+    return () => {
+      if (open) {
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        if (scrollY) {
+          window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+      }
+    };
+  }, [open]);
+
   return (
     <div 
       className={cn(`overflow-hidden fixed inset-0 z-50 flex w-full  bg-white shadow-2xl transition-transform duration-300 ease-in-out`, {
@@ -87,7 +124,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
         {/* Close Button */}
         <button 
             onClick={onClose}
-            className="absolute top-4 right-6 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors z-20"
+            className="absolute top-1 right-6 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors z-20"
         >
             <span className="text-2xl">&times;</span>
         </button>
@@ -96,7 +133,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
         {/* Render View Selection: Empty State vs Active Chat */}
         {messages.length === 0 ? (
             /* EMPTY STATE - CENTERED UI */
-            <div className="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
+            <div className="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto pt-16">
                 <div className="w-full max-w-[796px] flex flex-col gap-10 items-center">
                     
                     {/* Greeting */}
@@ -131,7 +168,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                 <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
                      {messages.map((msg, index) => (
                         <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[75%] rounded-2xl px-6 py-4 shadow-sm ${
+                            <div className={`max-w-[75%] rounded-2xl px-6 pb-4 pt-7 shadow-sm ${
                                 msg.sender === 'user' 
                                 ? 'bg-white text-gray-800 border border-gray-100 rounded-br-none' 
                                 : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'

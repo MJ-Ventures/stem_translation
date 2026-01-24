@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import MenuIcon from "./MenuIcon";
 import CloseIcon from "./CloseIcon";
@@ -17,6 +18,22 @@ const links: { href: string; label: string }[] = [
 ]
 
 const  NavBar = ({ className, mobileMenuOpen, setMobileMenuOpen }: NavBarProps)  => {
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    
+    // Close mobile menu if open
+    setMobileMenuOpen(false);
+  };
+
   return (
     <div className={cn("w-full max-w-[1112px] mx-auto border border-white-1 rounded-[16px] py-3 px-5 relative", className)}>
       <div className="flex items-center justify-between gap-1 w-full">
@@ -27,7 +44,12 @@ const  NavBar = ({ className, mobileMenuOpen, setMobileMenuOpen }: NavBarProps) 
         {/* Links */}
         <div className="hidden lg:flex lg:gap-[46px] lg:items-center">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="font-medium leading-[100%] tracking-0 text-black-1 text-[16px] text-center hover:text-blue-1 transition-colors">
+            <Link 
+              key={link.href} 
+              href={link.href} 
+              onClick={(e) => handleSmoothScroll(e, link.href)}
+              className="font-medium leading-[100%] tracking-0 text-black-1 text-[16px] text-center hover:text-blue-1 transition-colors"
+            >
               {link.label}
             </Link>
           ))}
@@ -56,7 +78,12 @@ const  NavBar = ({ className, mobileMenuOpen, setMobileMenuOpen }: NavBarProps) 
           </div>
           <div className="flex flex-col gap-6 p-6">
             {links.map((link) => (
-              <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className="font-medium text-[18px] text-black-1 hover:text-blue-1 transition-colors">
+              <Link 
+                key={link.href} 
+                href={link.href} 
+                onClick={(e) => handleSmoothScroll(e, link.href)}
+                className="font-medium text-[18px] text-black-1 hover:text-blue-1 transition-colors"
+              >
                 {link.label}
               </Link>
             ))}

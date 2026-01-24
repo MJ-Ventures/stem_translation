@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 export const useChatUI = () => {
-  const [chatOpen, setChatOpen] = useState(true);
+  const [chatOpen, setChatOpen] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const [showAttachDropdown, setShowAttachDropdown] = useState(false);
 
