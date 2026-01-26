@@ -1,0 +1,65 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/stem-translation:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/stem-translation:latest'
+      - '.'
+    id: 'build-image'
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/stem-translation:$SHORT_SHA']
+    id: 'push-image-sha'
+    waitFor: ['build-image']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/stem-translation:latest']
+    id: 'push-image-latest'
+    waitFor: ['build-image']
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'stem-translation'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/stem-translation:$SHORT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--port'
+      - '8080'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '10'
+      - '--timeout'
+      - '300'
+    id: 'deploy-cloud-run'
+    waitFor: ['push-image-sha']
+
+# Store images in Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/stem-translation:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/stem-translation:latest'
+
+# Build options
+options:
+  machineType: 'E2_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+  substitution_option: 'ALLOW_LOOSE'
+
+# Timeout for the entire build
+timeout: '1200s'
