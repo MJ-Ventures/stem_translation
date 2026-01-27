@@ -14,29 +14,28 @@ interface Message {
 interface ExpandedChatProps {
   open: boolean;
   onClose: () => void;
+  onNewChat: () => void;
   messages: Message[];
   chatMessage: string;
   setChatMessage: (msg: string) => void;
   handleKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleChatSubmit: () => void;
-  showAttachDropdown: boolean;
-  setShowAttachDropdown: (show: boolean) => void;
   isLoading: boolean;
 }
 
 const ExpandedChat: React.FC<ExpandedChatProps> = ({
   open,
   onClose,
+  onNewChat,
   messages,
   chatMessage,
   setChatMessage,
   handleKeyPress,
   handleChatSubmit,
-  showAttachDropdown,
-  setShowAttachDropdown,
   isLoading,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -47,6 +46,18 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
       scrollToBottom();
     }
   }, [messages, isLoading]);
+
+  // Focus the chat input whenever the panel opens
+  useEffect(() => {
+    if (!open) return;
+    const t = window.setTimeout(() => {
+      const input = panelRef.current?.querySelector<HTMLInputElement>(
+        'input[type="text"]',
+      );
+      input?.focus();
+    }, 350); // wait for slide-in animation / layout
+    return () => window.clearTimeout(t);
+  }, [open]);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -87,6 +98,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
 
   return (
     <div
+      ref={panelRef}
       className={cn(
         `overflow-hidden fixed inset-0 z-50 flex w-full  bg-white shadow-2xl transition-transform duration-300 ease-in-out`,
         {
@@ -110,28 +122,25 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
 
         <div className="flex-1 flex flex-col gap-5">
           <div className="flex-1 flex flex-col gap-4 w-full items-center">
-            <button className="cursor-pointer">
+            <button
+              type="button"
+              className="cursor-pointer"
+              onClick={() => {
+                onNewChat();
+                // focus input after state resets render
+                window.setTimeout(() => {
+                  const input = panelRef.current?.querySelector<HTMLInputElement>(
+                    'input[type="text"]',
+                  );
+                  input?.focus();
+                }, 0);
+              }}
+              aria-label="Start a new conversation"
+              title="New chat"
+            >
               <Image
                 src="/images/new-chat.svg"
                 alt="New Chat"
-                width={20}
-                height={20}
-                className="w-5 h-5 object-cover"
-              />
-            </button>
-            <button className="cursor-pointer">
-              <Image
-                src="/images/search.svg"
-                alt="Search"
-                width={20}
-                height={20}
-                className="w-5 h-5 object-cover"
-              />
-            </button>
-            <button className="cursor-pointer">
-              <Image
-                src="/images/gallery.svg"
-                alt="Settings"
                 width={20}
                 height={20}
                 className="w-5 h-5 object-cover"
@@ -189,8 +198,6 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                   setChatMessage={setChatMessage}
                   handleKeyPress={handleKeyPress}
                   handleChatSubmit={handleChatSubmit}
-                  showAttachDropdown={showAttachDropdown}
-                  setShowAttachDropdown={setShowAttachDropdown}
                   placeholder="What would you like to learn about today?"
                 />
               </div>
@@ -256,8 +263,6 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                   setChatMessage={setChatMessage}
                   handleKeyPress={handleKeyPress}
                   handleChatSubmit={handleChatSubmit}
-                  showAttachDropdown={showAttachDropdown}
-                  setShowAttachDropdown={setShowAttachDropdown}
                   placeholder="Type a message to continue..."
                 />
               </div>

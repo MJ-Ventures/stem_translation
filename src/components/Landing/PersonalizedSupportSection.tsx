@@ -1,18 +1,21 @@
 import Image from "next/image";
+import HubspotNewsletterForm from "../shared/HubspotNewsletterForm";
 import GradientButton from "../shared/GradientButton";
 
-const PersonalizedSupportSection = () => {
+type PersonalizedSupportSectionProps = {
+  onStartConversation?: () => void;
+};
+
+const PersonalizedSupportSection = ({
+  onStartConversation,
+}: PersonalizedSupportSectionProps) => {
   return (
     <div className="min-h-screen py-25 lg:py-50 px-5 lg:px-25 w-full bg-white flex flex-col gap-12 lg:flex-row lg:justify-center">
       {/* Left */}
-      <div className="w-full lg:w-1/2">
-        <Image
-          src="/images/form-img.svg"
-          alt="Form Image"
-          width={100}
-          height={100}
-          className="w-full h-full object-contain"
-        />
+      <div className="w-full lg:w-1/2 flex items-center justify-center">
+        <div className="w-full max-w-160 rounded-3xl bg-white shadow-1 border border-gray-100 p-6 lg:p-8">
+          <HubspotNewsletterForm />
+        </div>
       </div>
       {/* Right */}
       <div className="w-full lg:w-1/2 flex flex-col gap-11.75">
@@ -42,9 +45,6 @@ const PersonalizedSupportSection = () => {
               consultation to get started.
             </p>
           </div>
-          <GradientButton className="w-fit mt-6">
-            Start Conversation
-          </GradientButton>
         </div>
       </div>
     </div>

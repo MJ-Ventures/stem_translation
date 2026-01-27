@@ -12,8 +12,6 @@ const HeroSection = ({
   setChatMessage,
   handleKeyPress,
   handleChatSubmit,
-  showAttachDropdown,
-  setShowAttachDropdown,
 }: HeroSectionProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -41,7 +39,10 @@ const HeroSection = ({
       <div className="relative w-full flex-1">
         {/* Hero Content */}
         <HeroContent />
-        <div className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 mt-42.25">
+        <div
+          id="chat-module"
+          className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 mt-42.25"
+        >
           {/* Target Audience */}
           <TargetAudience />
           {/* Chatbox */}
@@ -50,8 +51,6 @@ const HeroSection = ({
             setChatMessage={setChatMessage}
             handleKeyPress={handleKeyPress}
             handleChatSubmit={handleChatSubmit}
-            showAttachDropdown={showAttachDropdown}
-            setShowAttachDropdown={setShowAttachDropdown}
           />
         </div>
       </div>

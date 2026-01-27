@@ -29,6 +29,15 @@ body {
   scroll-behavior: smooth;
 }
 
+/* HubSpot embedded forms */
+.hs-form-frame {
+  width: 100%;
+}
+.hs-form-frame iframe {
+  width: 100% !important;
+  border: 0;
+}
+
 /* Gradient button styles */
 .gradient-primary {
   background: linear-gradient(

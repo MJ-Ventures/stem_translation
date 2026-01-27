@@ -6,6 +6,11 @@ export const useStemChat = () => {
   const ui = useChatUI();
   const session = useChatSession();
 
+  const startNewConversation = useCallback(() => {
+    ui.setChatMessage('');
+    session.resetConversation();
+  }, [session, ui]);
+
   const handleChatSubmit = useCallback(async () => {
     if (!ui.chatMessage.trim()) return;
     
@@ -28,5 +33,6 @@ export const useStemChat = () => {
     session,
     handleChatSubmit,
     handleKeyPress,
+    startNewConversation,
   };
 };

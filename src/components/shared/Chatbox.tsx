@@ -8,8 +8,6 @@ export type ChatboxProps = {
   setChatMessage: (message: string) => void;
   handleKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleChatSubmit: () => void;
-  showAttachDropdown: boolean;
-  setShowAttachDropdown: (show: boolean) => void;
   placeholder?: string;
 };
 
@@ -18,8 +16,6 @@ const Chatbox = ({
   setChatMessage,
   handleKeyPress,
   handleChatSubmit,
-  showAttachDropdown,
-  setShowAttachDropdown,
   placeholder = "What would you like to learn about today?",
 }: ChatboxProps) => {
   return (
@@ -34,10 +30,7 @@ const Chatbox = ({
       />
 
       {/* Footer */}
-      <ChatFooter
-        showAttachDropdown={showAttachDropdown}
-        setShowAttachDropdown={setShowAttachDropdown}
-      />
+      <ChatFooter />
     </div>
   );
 };

@@ -60,8 +60,13 @@ const TargetAudience = () => {
     setOpenIndex((prev) => (prev === i ? null : i));
   }
 
+  function togglePill(title: string) {
+    setSelected((s) => ({ ...s, [title]: s[title] ? null : title }));
+    setOpenIndex(null);
+  }
+
   function handleSelect(title: string, option: string) {
-    setSelected((s) => ({ ...s, [title]: option }));
+    setSelected((s) => ({ ...s, [title]: s[title] === option ? null : option }));
     setOpenIndex(null);
   }
 
@@ -70,14 +75,23 @@ const TargetAudience = () => {
       <p className="font-medium text-[20px] leading-[100%] tracking-0 text-black-2 text-center w-full">
         Who is your Target Audience?
       </p>
-      <div className="flex flex-wrap gap-6 items-center justify-center">
+      <div className="flex flex-wrap md:flex-nowrap gap-4 items-center justify-center max-w-full px-1">
         {targetAudienceData.map((item, index) => (
           <div key={item.title} className="relative">
             <button
               aria-haspopup={!!item.options}
               aria-expanded={openIndex === index}
-              onClick={() => (item.options ? toggleDropdown(index) : undefined)}
-              className="py-3 px-4 flex gap-2 items-center justify-center rounded-lg border border-white-1 cursor-pointer hover:border-blue-1 hover:bg-blue-50/30 transition-all"
+              aria-pressed={!!selected[item.title]}
+              onClick={() =>
+                item.options ? toggleDropdown(index) : togglePill(item.title)
+              }
+              className={[
+                "py-2.5 px-3.5 flex gap-2 items-center justify-center rounded-lg border cursor-pointer transition-all whitespace-nowrap",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-1 focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+                selected[item.title]
+                  ? "border-blue-1 bg-blue-50/30"
+                  : "border-white-1 hover:border-blue-1 hover:bg-blue-50/30",
+              ].join(" ")}
             >
               <Image
                 alt={`${item.title} icon`}
@@ -86,8 +100,13 @@ const TargetAudience = () => {
                 width={24}
                 height={24}
               />
-              <p className="font-medium text-[16px] leading-5 tracking-0 text-black-1">
+              <p className="font-medium text-[16px] leading-5 tracking-0 text-black-1 flex items-center gap-2">
                 {item.title}
+                {item.options && selected[item.title] && (
+                  <span className="text-[11px] leading-4 px-1.5 py-0.5 rounded-full border border-blue-1/20 bg-blue-50/60 text-blue-1">
+                    {selected[item.title]}
+                  </span>
+                )}
               </p>
             </button>
 
@@ -97,17 +116,16 @@ const TargetAudience = () => {
                   <button
                     key={opt}
                     onClick={() => handleSelect(item.title, opt)}
-                    className="w-full text-left py-2.5 px-2 hover:bg-gray-2 font-medium text-[14px] leading-4 tracking-0 text-black-2 cursor-pointer"
+                    className={[
+                      "w-full text-left py-2.5 px-2 font-medium text-[14px] leading-4 tracking-0 cursor-pointer transition-colors",
+                      selected[item.title] === opt
+                        ? "bg-blue-50/60 text-blue-1"
+                        : "text-black-2 hover:bg-gray-2",
+                    ].join(" ")}
                   >
                     {opt}
                   </button>
                 ))}
-              </div>
-            )}
-
-            {selected[item.title] && (
-              <div className="mt-2 text-sm text-gray-600 text-center w-full">
-                Selected: {selected[item.title]}
               </div>
             )}
           </div>

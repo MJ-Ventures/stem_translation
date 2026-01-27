@@ -19,6 +19,14 @@ export const useChatSession = () => {
     isLoading: false,
   });
 
+  const resetConversation = useCallback(() => {
+    setChatState({
+      conversationId: null,
+      messages: [],
+      isLoading: false,
+    });
+  }, []);
+
   const sendMessage = useCallback(async (userMessage: string) => {
     if (!userMessage.trim()) return;
 
@@ -114,5 +122,6 @@ export const useChatSession = () => {
   return {
     chatState,
     sendMessage,
+    resetConversation,
   };
 };

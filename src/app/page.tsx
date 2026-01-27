@@ -10,7 +10,16 @@ import ExpandedChat from "@/components/Chat/ExpandedChat";
 import { useStemChat } from "@/hooks/useStemChat";
 
 const StemLandingPage = () => {
-  const { ui, session, handleChatSubmit, handleKeyPress } = useStemChat();
+  const { ui, session, handleChatSubmit, handleKeyPress, startNewConversation } =
+    useStemChat();
+  const handleStartConversation = () => {
+    const el = document.getElementById("chat-module");
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.setTimeout(() => {
+      const input = el?.querySelector<HTMLInputElement>('input[type="text"]');
+      input?.focus();
+    }, 350);
+  };
   return (
     <div className="bg-white relative w-full min-h-screen overflow-hidden max-w-400 mx-auto flex flex-col">
       <HeroSection
@@ -18,26 +27,27 @@ const StemLandingPage = () => {
         setChatMessage={ui.setChatMessage}
         handleKeyPress={handleKeyPress}
         handleChatSubmit={handleChatSubmit}
-        showAttachDropdown={ui.showAttachDropdown}
-        setShowAttachDropdown={ui.setShowAttachDropdown}
       />
-      <FeaturesSection />
-      <PersonalizedSupportSection />
+      <FeaturesSection onStartConversation={handleStartConversation} />
+      <PersonalizedSupportSection onStartConversation={handleStartConversation} />
       <Faqs />
-      <GetStartedSection />
+      <GetStartedSection onStartConversation={handleStartConversation} />
       <Footer />
       <CopyrightBar />
       {/* Chat Side Panel */}
       <ExpandedChat
         open={ui.chatOpen}
         onClose={() => ui.setChatOpen(false)}
+        onNewChat={() => {
+          startNewConversation();
+          // keep the panel open + focus the input
+          ui.setChatOpen(true);
+        }}
         messages={session.chatState.messages}
         chatMessage={ui.chatMessage}
         setChatMessage={ui.setChatMessage}
         handleKeyPress={handleKeyPress}
         handleChatSubmit={handleChatSubmit}
-        showAttachDropdown={ui.showAttachDropdown}
-        setShowAttachDropdown={ui.setShowAttachDropdown}
         isLoading={session.chatState.isLoading}
       />
     </div>
