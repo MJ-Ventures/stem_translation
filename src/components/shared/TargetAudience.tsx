@@ -4,16 +4,12 @@ import { useEffect, useRef, useState } from "react";
 
 const targetAudienceData = [
   {
-    title: "Myself",
-    icon: "/images/user-icon.svg",
-  },
-  {
     title: "Researcher",
     icon: "/images/books-icon.svg",
     options: ["In the field", "Not in the field"],
   },
   {
-    title: "Adult Learner",
+    title: "General Public",
     icon: "/images/nerd.svg",
   },
   {
@@ -39,7 +35,7 @@ const TargetAudience = () => {
       const init: Record<string, string | null> = {};
       targetAudienceData.forEach((t) => (init[t.title] = null));
       return init;
-    },
+    }
   );
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -61,12 +57,23 @@ const TargetAudience = () => {
   }
 
   function togglePill(title: string) {
-    setSelected((s) => ({ ...s, [title]: s[title] ? null : title }));
+    setSelected((s) => {
+      const next: Record<string, string | null> = {};
+      targetAudienceData.forEach((t) => (next[t.title] = null));
+      if (s[title]) return next; // deselect if already selected
+      next[title] = title;
+      return next;
+    });
     setOpenIndex(null);
   }
 
   function handleSelect(title: string, option: string) {
-    setSelected((s) => ({ ...s, [title]: s[title] === option ? null : option }));
+    setSelected((s) => {
+      const next: Record<string, string | null> = {};
+      targetAudienceData.forEach((t) => (next[t.title] = null));
+      next[title] = s[title] === option ? null : option;
+      return next;
+    });
     setOpenIndex(null);
   }
 

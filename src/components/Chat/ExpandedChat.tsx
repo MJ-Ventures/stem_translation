@@ -51,9 +51,8 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
   useEffect(() => {
     if (!open) return;
     const t = window.setTimeout(() => {
-      const input = panelRef.current?.querySelector<HTMLInputElement>(
-        'input[type="text"]',
-      );
+      const input =
+        panelRef.current?.querySelector<HTMLInputElement>('input[type="text"]');
       input?.focus();
     }, 350); // wait for slide-in animation / layout
     return () => window.clearTimeout(t);
@@ -104,7 +103,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
         {
           "translate-x-0": open,
           "translate-x-full": !open,
-        },
+        }
       )}
     >
       {/* Sidebar Rail */}
@@ -129,9 +128,10 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                 onNewChat();
                 // focus input after state resets render
                 window.setTimeout(() => {
-                  const input = panelRef.current?.querySelector<HTMLInputElement>(
-                    'input[type="text"]',
-                  );
+                  const input =
+                    panelRef.current?.querySelector<HTMLInputElement>(
+                      'input[type="text"]'
+                    );
                   input?.focus();
                 }, 0);
               }}
@@ -149,7 +149,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
           </div>
 
           {/* Bottom User Avatar */}
-          <button className="cursor-pointer">
+          {/* <button className="cursor-pointer">
             <Image
               src="/images/avatar.svg"
               alt="New Chat"
@@ -157,7 +157,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
               height={32}
               className="w-8 h-8 object-cover"
             />
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -211,7 +211,9 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
               {messages.map((msg, index) => (
                 <div
                   key={index}
-                  className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                  className={`flex ${
+                    msg.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
                     className={`max-w-[75%] rounded-2xl px-6 pb-4 pt-7 shadow-sm ${

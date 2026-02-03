@@ -81,7 +81,7 @@ const HeroContent = () => {
           ))}
         </div>
         <p className="font-medium text-[28px] leading-[100%] lg:text-[48px] tracking-0 text-black-2 text-center">
-          Turn Complex STEM Topics Into Stories People Remember
+          Turn STEM Topics Into Stories People Understand
         </p>
       </div>
       <p className="font-normal text-[16px] leading-8 text-black-2 text-center w-full">
