@@ -46,12 +46,9 @@ const FeaturesSection = ({ onStartConversation }: FeaturesSectionProps) => {
               Features that Make Every Chat Smarter
             </h1>
             <p className="font-normal text-[16px] leading-[32px] tracking-0 text-black-2 text-center">
-              Sometimes you need more than a great explanation—you need a
-              partner who can help you deliver it with clarity and impact.
-              Jessica Burgess, The STEM Translator™, offers expert coaching,
-              workshops and one-one guidance rooted in learning science and
-              years of professional experience.  Schedule a free 30- minute
-              consultation to get started
+              Our chatbot uses audience-aware reasoning, learning science–driven
+              explanations, and a custom analogy engine to make every STEM
+              conversation clearer and more memorable.
             </p>
           </div>
         </div>

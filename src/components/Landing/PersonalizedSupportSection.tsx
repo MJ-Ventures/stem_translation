@@ -1,24 +1,13 @@
 import Image from "next/image";
-import HubspotNewsletterForm from "../shared/HubspotNewsletterForm";
+import Link from "next/link";
 import GradientButton from "../shared/GradientButton";
 
-type PersonalizedSupportSectionProps = {
-  onStartConversation?: () => void;
-};
+const CONSULTATION_URL = "https://meetings.hubspot.com/jessica1839";
 
-const PersonalizedSupportSection = ({
-  onStartConversation,
-}: PersonalizedSupportSectionProps) => {
+const PersonalizedSupportSection = () => {
   return (
-    <div className="min-h-screen py-25 lg:py-50 px-5 lg:px-25 w-full bg-white flex flex-col gap-12 lg:flex-row lg:justify-center">
-      {/* Left */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center">
-        <div className="w-full max-w-160 rounded-3xl bg-white shadow-1 border border-gray-100 p-6 lg:p-8">
-          <HubspotNewsletterForm />
-        </div>
-      </div>
-      {/* Right */}
-      <div className="w-full lg:w-1/2 flex flex-col gap-11.75">
+    <div className="min-h-screen py-25 lg:py-50 px-5 lg:px-25 w-full bg-white flex flex-col gap-12 lg:flex-row lg:justify-center lg:items-center">
+      <div className="w-full lg:max-w-[500px] flex flex-col gap-11.75">
         <div className="bg-white-5 rounded-[10px] w-full lg:min-w-62.5 lg:max-w-62.5 min-h-62.5 max-h-62.5 overflow-hidden">
           <Image
             src="/images/person.svg"
@@ -41,9 +30,24 @@ const PersonalizedSupportSection = ({
               partner who can help you deliver it with clarity and impact.
               Jessica Burgess, The STEM Translator™, offers expert coaching,
               workshops and one-one guidance rooted in learning science and
-              years of professional experience. Schedule a free 30-minute
-              consultation to get started.
+              years of professional experience. Check out our services or
+              schedule a free 30-minute consultation to get started.
             </p>
+            <div className="flex flex-wrap gap-3 mt-2">
+              <Link href="/" className="inline-block">
+                <GradientButton type="button" className="w-fit">
+                  Check Out Services
+                </GradientButton>
+              </Link>
+              <a
+                href={CONSULTATION_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center font-bold text-[16px] leading-[100%] tracking-0 py-2.5 px-5 rounded-[10px] border-2 border-blue-1 text-blue-1 hover:bg-blue-50/30 transition-colors"
+              >
+                Book a Consultation
+              </a>
+            </div>
           </div>
         </div>
       </div>

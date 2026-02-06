@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 const ChatFooter = () => {
-  const responseOptions = ["Short Response", "Long Response"];
+  const responseOptions = ["Short Explanation", "Long Explanation"];
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<string>(responseOptions[0]);
   const containerRef = useRef<HTMLDivElement | null>(null);

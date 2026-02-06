@@ -1,8 +1,7 @@
 'use client';
-import { useState } from "react"
 import Image from "next/image"
-import GradientButton from "../shared/GradientButton"
 import Link from "next/link"
+import HubspotNewsletterForm from "../shared/HubspotNewsletterForm"
 
 
 const socialLinks = [
@@ -39,10 +38,6 @@ const links = [
         label: "Features"
     },
     {
-        href: "#pricing",
-        label: "Pricing Plan"
-    },
-    {
         href: "#faqs",
         label: "FAQs"
     },
@@ -53,36 +48,6 @@ const links = [
 ]   
 
 const Footer = () => {
-  const [email, setEmail] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email.trim()) return
-
-    setIsSubmitting(true)
-    try {
-      // TODO: Replace with actual API endpoint
-      // await fetch('/api/newsletter', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email })
-      // })
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      setSubmitted(true)
-      setEmail("")
-      setTimeout(() => setSubmitted(false), 3000)
-    } catch (error) {
-      console.error('Newsletter subscription error:', error)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   return (
     <div id="support" className="bg-white relative w-full">
         {/* Background */}
@@ -96,24 +61,8 @@ const Footer = () => {
         <div className="px-5 lg:px-[100px] pt-[100px] lg:pt-[160px] pb-[60px] flex flex-col gap-12 lg:gap-[90px] relative">
             {/* Newsletter */}
             <div className="w-full max-w-[966px] flex flex-col gap-[18px]">
-                <h1 className="font-medium text-[28px] lg:text-[48px] leading-[48px] lg:leading-[68px] tracking-0 text-black-2">Don’t miss any Updates. <br /> Subscribe our Newsletters.</h1>
-                <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-4">
-                    <input 
-                        type="email" 
-                        placeholder="Enter email address" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="py-3 px-4 rounded-[8px] border border-white-1 outline-none font-normal italic text-[14px] leading-[24px] tracking-[-0.3px] text-black-2 w-full max-w-[335px] placeholder:text-black-2"
-                    />    
-                    <GradientButton 
-                        type="submit"
-                        className="w-fit"
-                        disabled={isSubmitting || submitted}
-                    >
-                        {submitted ? "Subscribed!" : isSubmitting ? "Subscribing..." : "Subscribe"}
-                    </GradientButton>
-                </form>
+                <h1 className="font-medium text-[28px] lg:text-[48px] leading-[48px] lg:leading-[68px] tracking-0 text-black-2">Don’t miss any updates. Subscribe to our Newsletter.</h1>
+                <HubspotNewsletterForm className="w-full max-w-[400px]" />
             </div>
             {/* Footer Links */}
             <div className="relative flex flex-col gap-6 items-center sm:flex-row sm:items-start justify-between">

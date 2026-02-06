@@ -21,14 +21,14 @@ const ChatViewPage = () => {
   return (
     <div className="bg-white relative w-full min-h-screen overflow-hidden max-w-400 mx-auto flex flex-col">
       {/* Chat view only - same block as hero chat module */}
-      <div className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 flex-1 justify-center px-5 py-12">
+      <div className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 flex-1 justify-center px-5 pt-6 pb-8">
         <TargetAudience />
         <Chatbox
           chatMessage={ui.chatMessage}
           setChatMessage={ui.setChatMessage}
           handleKeyPress={handleKeyPress}
           handleChatSubmit={handleChatSubmit}
-          placeholder="What would you like to learn about today?"
+          placeholder="What STEM topic would you like explained?"
         />
       </div>
 

@@ -41,7 +41,7 @@ const HeroSection = ({
         <HeroContent />
         <div
           id="chat-module"
-          className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 mt-42.25"
+          className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 mt-16"
         >
           {/* Target Audience */}
           <TargetAudience />

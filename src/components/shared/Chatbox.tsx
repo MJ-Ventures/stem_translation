@@ -16,7 +16,7 @@ const Chatbox = ({
   setChatMessage,
   handleKeyPress,
   handleChatSubmit,
-  placeholder = "What would you like to learn about today?",
+  placeholder = "What STEM topic would you like explained?",
 }: ChatboxProps) => {
   return (
     <div className="relative flex flex-col gap-16 p-4 rounded-lg bg-white shadow-1 border border-gray-100">

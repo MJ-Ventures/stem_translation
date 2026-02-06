@@ -3,7 +3,6 @@ import HeroSection from "@/components/Landing/HeroSection";
 import FeaturesSection from "@/components/Landing/FeaturesSection";
 import PersonalizedSupportSection from "@/components/Landing/PersonalizedSupportSection";
 import Faqs from "@/components/Landing/Faqs";
-import GetStartedSection from "@/components/Landing/GetStartedSection";
 import Footer from "@/components/Landing/Footer";
 import CopyrightBar from "@/components/Landing/CopyrightBar";
 import ExpandedChat from "@/components/Chat/ExpandedChat";
@@ -29,9 +28,8 @@ const StemLandingPage = () => {
         handleChatSubmit={handleChatSubmit}
       />
       <FeaturesSection onStartConversation={handleStartConversation} />
-      <PersonalizedSupportSection onStartConversation={handleStartConversation} />
+      <PersonalizedSupportSection />
       <Faqs />
-      <GetStartedSection onStartConversation={handleStartConversation} />
       <Footer />
       <CopyrightBar />
       {/* Chat Side Panel */}

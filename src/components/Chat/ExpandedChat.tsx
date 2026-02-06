@@ -182,7 +182,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                   Hello Sarah!
                 </h2>
                 <h3 className="text-[28px] text-gray-600 font-light">
-                  What would you like to learn today?
+                  What STEM topic would you like explained?
                 </h3>
               </div>
 
@@ -198,7 +198,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                   setChatMessage={setChatMessage}
                   handleKeyPress={handleKeyPress}
                   handleChatSubmit={handleChatSubmit}
-                  placeholder="What would you like to learn about today?"
+                  placeholder="What STEM topic would you like explained?"
                 />
               </div>
             </div>

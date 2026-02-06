@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 const targetAudienceData = [
   {
-    title: "Researcher",
+    title: "Researchers",
     icon: "/images/books-icon.svg",
     options: ["In the field", "Not in the field"],
   },
@@ -13,7 +13,7 @@ const targetAudienceData = [
     icon: "/images/nerd.svg",
   },
   {
-    title: "Teacher",
+    title: "Teachers",
     icon: "/images/board-icon.svg",
   },
   {
