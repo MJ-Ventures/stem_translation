@@ -2,7 +2,11 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const ChatFooter = () => {
+type ChatFooterProps = {
+  onChangeResponseType?: (value: string) => void;
+};
+
+const ChatFooter = ({ onChangeResponseType }: ChatFooterProps) => {
   const responseOptions = ["Short Explanation", "Long Explanation"];
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<string>(responseOptions[0]);
@@ -43,13 +47,14 @@ const ChatFooter = () => {
           </button>
 
           {open && (
-            <div className="absolute py-2 z-50 mt-2 left-0 w-40 bg-white rounded-md shadow-lg overflow-hidden">
+            <div className="absolute py-2 z-50 bottom-full left-0 mb-2 w-40 bg-white rounded-md shadow-lg overflow-hidden">
               {responseOptions.map((opt) => (
                 <button
                   key={opt}
                   onClick={() => {
                     setSelected(opt);
                     setOpen(false);
+                    onChangeResponseType?.(opt);
                   }}
                   className="w-full text-left py-2.5 px-3 hover:bg-gray-50 font-medium text-[14px] leading-4 tracking-0 text-black-2 cursor-pointer"
                 >

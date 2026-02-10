@@ -27,7 +27,11 @@ export const useChatSession = () => {
     });
   }, []);
 
-  const sendMessage = useCallback(async (userMessage: string) => {
+  const sendMessage = useCallback(
+    async (
+      userMessage: string,
+      additionalContext?: Record<string, string> | null,
+    ) => {
     if (!userMessage.trim()) return;
 
     // Optimistic update
@@ -55,7 +59,7 @@ export const useChatSession = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            additional_context: null,
+            additional_context: additionalContext ?? null,
             conversation_id: null,
             message: userMessage,
             name: null,
@@ -72,17 +76,20 @@ export const useChatSession = () => {
 
       } else {
         // Send message to existing conversation
-        const response = await fetch(`${API_BASE}/${chatState.conversationId}/message`, {
+        const response = await fetch(
+          `${API_BASE}/${chatState.conversationId}/message`,
+          {
           method: 'POST',
           headers: {
             'accept': '*/*',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            additional_context: null,
-            message: userMessage,
-          }),
-        });
+            body: JSON.stringify({
+              additional_context: additionalContext ?? null,
+              message: userMessage,
+            }),
+          },
+        );
 
         data = await response.json();
       }
@@ -117,7 +124,9 @@ export const useChatSession = () => {
         isLoading: false,
       }));
     }
-  }, [chatState.conversationId]);
+    },
+    [chatState.conversationId],
+  );
 
   return {
     chatState,

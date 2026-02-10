@@ -5,13 +5,18 @@ import NavBar from "./Navbar";
 import TargetAudience from "../shared/TargetAudience";
 import Chatbox, { ChatboxProps } from "../shared/Chatbox";
 
-type HeroSectionProps = ChatboxProps;
+type HeroSectionProps = ChatboxProps & {
+  onAudienceChange: (description: string | null) => void;
+  onResponseTypeChange: (value: string) => void;
+};
 
 const HeroSection = ({
   chatMessage,
   setChatMessage,
   handleKeyPress,
   handleChatSubmit,
+  onAudienceChange,
+  onResponseTypeChange,
 }: HeroSectionProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -44,13 +49,14 @@ const HeroSection = ({
           className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 mt-16"
         >
           {/* Target Audience */}
-          <TargetAudience />
+          <TargetAudience onChange={onAudienceChange} />
           {/* Chatbox */}
           <Chatbox
             chatMessage={chatMessage}
             setChatMessage={setChatMessage}
             handleKeyPress={handleKeyPress}
             handleChatSubmit={handleChatSubmit}
+            onChangeResponseType={onResponseTypeChange}
           />
         </div>
       </div>

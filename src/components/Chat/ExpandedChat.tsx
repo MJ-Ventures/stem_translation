@@ -15,6 +15,8 @@ interface ExpandedChatProps {
   open: boolean;
   onClose: () => void;
   onNewChat: () => void;
+  onAudienceChange: (description: string | null) => void;
+  onResponseTypeChange: (value: string) => void;
   messages: Message[];
   chatMessage: string;
   setChatMessage: (msg: string) => void;
@@ -27,6 +29,8 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
   open,
   onClose,
   onNewChat,
+  onAudienceChange,
+  onResponseTypeChange,
   messages,
   chatMessage,
   setChatMessage,
@@ -188,7 +192,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
 
               {/* Target Audience */}
               <div className="scale-90 origin-center w-full">
-                <TargetAudience />
+                <TargetAudience onChange={onAudienceChange} />
               </div>
 
               {/* Chat Input */}
@@ -198,6 +202,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                   setChatMessage={setChatMessage}
                   handleKeyPress={handleKeyPress}
                   handleChatSubmit={handleChatSubmit}
+                  onChangeResponseType={onResponseTypeChange}
                   placeholder="What STEM topic would you like explained?"
                 />
               </div>
@@ -265,6 +270,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                   setChatMessage={setChatMessage}
                   handleKeyPress={handleKeyPress}
                   handleChatSubmit={handleChatSubmit}
+                  onChangeResponseType={onResponseTypeChange}
                   placeholder="Type a message to continue..."
                 />
               </div>

@@ -34,7 +34,10 @@ const PersonalizedSupportSection = () => {
               schedule a free 30-minute consultation to get started.
             </p>
             <div className="flex flex-wrap gap-3 mt-2">
-              <Link href="/" className="inline-block">
+              <Link
+                href="https://stemtranslationco.com"
+                className="inline-block"
+              >
                 <GradientButton type="button" className="w-fit">
                   Check Out Services
                 </GradientButton>

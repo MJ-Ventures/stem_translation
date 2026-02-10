@@ -28,7 +28,11 @@ const targetAudienceData = [
   },
 ];
 
-const TargetAudience = () => {
+type TargetAudienceProps = {
+  onChange?: (description: string | null) => void;
+};
+
+const TargetAudience = ({ onChange }: TargetAudienceProps) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [selected, setSelected] = useState<Record<string, string | null>>(
     () => {
@@ -60,8 +64,13 @@ const TargetAudience = () => {
     setSelected((s) => {
       const next: Record<string, string | null> = {};
       targetAudienceData.forEach((t) => (next[t.title] = null));
-      if (s[title]) return next; // deselect if already selected
+      const wasSelected = !!s[title];
+      if (wasSelected) {
+        onChange?.(null);
+        return next; // deselect if already selected
+      }
       next[title] = title;
+      onChange?.(title);
       return next;
     });
     setOpenIndex(null);
@@ -71,7 +80,15 @@ const TargetAudience = () => {
     setSelected((s) => {
       const next: Record<string, string | null> = {};
       targetAudienceData.forEach((t) => (next[t.title] = null));
-      next[title] = s[title] === option ? null : option;
+      const wasSelected = s[title] === option;
+      if (wasSelected) {
+        next[title] = null;
+        onChange?.(null);
+      } else {
+        next[title] = option;
+        const desc = `${title}${option ? ` - ${option}` : ""}`;
+        onChange?.(desc);
+      }
       return next;
     });
     setOpenIndex(null);

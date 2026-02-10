@@ -26,6 +26,8 @@ const StemLandingPage = () => {
         setChatMessage={ui.setChatMessage}
         handleKeyPress={handleKeyPress}
         handleChatSubmit={handleChatSubmit}
+        onAudienceChange={ui.setAudienceContext}
+        onResponseTypeChange={ui.setResponseType}
       />
       <FeaturesSection onStartConversation={handleStartConversation} />
       <PersonalizedSupportSection />
@@ -41,6 +43,8 @@ const StemLandingPage = () => {
           // keep the panel open + focus the input
           ui.setChatOpen(true);
         }}
+        onAudienceChange={ui.setAudienceContext}
+        onResponseTypeChange={ui.setResponseType}
         messages={session.chatState.messages}
         chatMessage={ui.chatMessage}
         setChatMessage={ui.setChatMessage}

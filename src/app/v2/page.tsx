@@ -21,13 +21,14 @@ const ChatViewPage = () => {
   return (
     <div className="bg-white relative w-full min-h-screen overflow-hidden max-w-400 mx-auto flex flex-col">
       {/* Chat view only - same block as hero chat module */}
-      <div className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 flex-1 justify-center px-5 pt-6 pb-8">
-        <TargetAudience />
+      <div className="w-full max-w-198.5 mx-auto flex flex-col gap-4.5 flex-1 px-5 py-30">
+        <TargetAudience onChange={ui.setAudienceContext} />
         <Chatbox
           chatMessage={ui.chatMessage}
           setChatMessage={ui.setChatMessage}
           handleKeyPress={handleKeyPress}
           handleChatSubmit={handleChatSubmit}
+          onChangeResponseType={ui.setResponseType}
           placeholder="What STEM topic would you like explained?"
         />
       </div>
@@ -39,6 +40,8 @@ const ChatViewPage = () => {
           startNewConversation();
           ui.setChatOpen(true);
         }}
+        onAudienceChange={ui.setAudienceContext}
+        onResponseTypeChange={ui.setResponseType}
         messages={session.chatState.messages}
         chatMessage={ui.chatMessage}
         setChatMessage={ui.setChatMessage}

@@ -9,6 +9,7 @@ export type ChatboxProps = {
   handleKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleChatSubmit: () => void;
   placeholder?: string;
+  onChangeResponseType?: (value: string) => void;
 };
 
 const Chatbox = ({
@@ -17,6 +18,7 @@ const Chatbox = ({
   handleKeyPress,
   handleChatSubmit,
   placeholder = "What STEM topic would you like explained?",
+  onChangeResponseType,
 }: ChatboxProps) => {
   return (
     <div className="relative flex flex-col gap-16 p-4 rounded-lg bg-white shadow-1 border border-gray-100">
@@ -30,7 +32,7 @@ const Chatbox = ({
       />
 
       {/* Footer */}
-      <ChatFooter />
+      <ChatFooter onChangeResponseType={onChangeResponseType} />
     </div>
   );
 };
