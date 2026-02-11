@@ -107,7 +107,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
         {
           "translate-x-0": open,
           "translate-x-full": !open,
-        }
+        },
       )}
     >
       {/* Sidebar Rail */}
@@ -134,7 +134,7 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
                 window.setTimeout(() => {
                   const input =
                     panelRef.current?.querySelector<HTMLInputElement>(
-                      'input[type="text"]'
+                      'input[type="text"]',
                     );
                   input?.focus();
                 }, 0);
@@ -182,9 +182,6 @@ const ExpandedChat: React.FC<ExpandedChatProps> = ({
             <div className="w-full max-w-199 flex flex-col gap-10 items-center">
               {/* Greeting */}
               <div className="text-center space-y-2">
-                <h2 className="text-[32px] font-medium text-gray-800">
-                  Hello Sarah!
-                </h2>
                 <h3 className="text-[28px] text-gray-600 font-light">
                   What STEM topic would you like explained?
                 </h3>
