@@ -135,7 +135,7 @@ const TargetAudience = ({ onChange }: TargetAudienceProps) => {
             </button>
 
             {item.options && openIndex === index && (
-              <div className="absolute py-2 z-50 mt-2 left-0 w-35 bg-white rounded-md shadow-lg overflow-hidden">
+              <div className="absolute py-2 z-50 bottom-full mb-2 left-0 w-35 bg-white rounded-md shadow-lg overflow-hidden">
                 {item.options.map((opt) => (
                   <button
                     key={opt}
